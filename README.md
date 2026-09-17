@@ -29,3 +29,27 @@ curl.exe -i -X POST http://localhost:8000/tasks -H "Content-Type: application/js
 \`\`\`
 
 Returns: `{"id": 4, "title": "Buy milk", "done": false}` with status `201`.
+
+
+## Database
+
+This project now uses **SQLite** instead of an in-memory list, so task 
+data persists across server restarts.
+
+- **Why SQLite:** Lightweight, file-based, requires no separate server 
+  or installation — ideal for a small project like this.
+- **Database file location:** `tasks.db` in the project root (created 
+  automatically on first run).
+- **How to start the project:** Same as before — `uvicorn main:app 
+  --reload --port 8000`. The database and `tasks` table are created 
+  automatically if they don't exist, and 3 example tasks are inserted 
+  only on the very first run.
+
+### Example SQL query
+
+```sql
+SELECT * FROM tasks WHERE done = 1;
+```
+Returns all completed tasks.
+
+
