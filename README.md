@@ -53,3 +53,44 @@ SELECT * FROM tasks WHERE done = 1;
 Returns all completed tasks.
 
 
+## Running with Docker
+
+This project now runs fully containerized — both the API and PostgreSQL 
+database start together with a single command.
+
+### Start everything
+
+```bash
+docker compose up --build
+```
+
+This starts:
+- **db**: PostgreSQL 16 in a container, with a named volume (`pgdata`) 
+  so data survives container restarts
+- **api**: The FastAPI app, built from the Dockerfile, connecting to 
+  the `db` service using the `DATABASE_URL` environment variable
+
+The API is available at `http://localhost:8000` — all endpoints and 
+behavior are identical to the previous (SQLite) version. Only the 
+storage layer changed.
+
+### Environment variables
+
+Copy `.env.example` to `.env` and fill in real values before running 
+locally without Docker. When running via `docker compose`, the 
+connection variables are already set in `docker-compose.yml`.
+
+### Persistence proof
+
+Created a task, ran `docker compose down` (stopping and removing both 
+containers), then `docker compose up --build` again. The task was still 
+present afterward — confirming data survives full container restarts, 
+not just app restarts, because it's stored in the `pgdata` named volume.
+
+### Stop everything
+
+```bash
+docker compose down
+```
+
+
